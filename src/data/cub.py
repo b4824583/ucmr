@@ -19,6 +19,8 @@ if not osp.isdir(cub_dir):
     cub_dir = '/scratch3/shubham/data/birds_data/CUB_200_2011/'
 if not osp.isdir(cub_dir):
     cub_dir = '/private/home/shubhamgoel/data/CUB_200_2011/'
+if not osp.isdir(cub_dir):
+    cub_dir = '/home/parker/ucmr/CUB_200_2011'
 
 flags.DEFINE_string('cub_dir', cub_dir, 'CUB Data Directory')
 curr_path = osp.dirname(osp.abspath(__file__))
@@ -70,6 +72,7 @@ class CubDataset(base_data.BaseDataset):
 
 def data_loader(opts):
     dset = CubDataset(opts)
+    print("batch size:"+str(opts.batch_size))
     # dset = d_set_func(opts, filter_key=filter_key)
     return DataLoader(
         dset,
