@@ -40,7 +40,7 @@ flags.DEFINE_float('max_grad_norm', 100, 'Clipping gradient norm at this value')
 flags.DEFINE_integer('batch_size', 12, 'Size of minibatches')
 flags.DEFINE_integer('num_iter', 1000000, 'Number of training iterations. 0 -> Use epoch_iter')
 flags.DEFINE_integer('start_num_iter', 0, 'Number of training iterations. 0 -> Use epoch_iter')
-flags.DEFINE_integer('n_data_workers', 4, 'Number of data loading workers')
+flags.DEFINE_integer('n_data_workers', 0, 'Number of data loading workers')
 flags.DEFINE_boolean('shuffle_data', True, 'Whether dataloader shuffles data')
 
 ## Flags for logging and snapshotting

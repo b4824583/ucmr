@@ -60,7 +60,7 @@ flags.DEFINE_string('pretrained_network_path', '', 'If empty, will use "cache_di
 flags.DEFINE_float('initial_quat_bias_deg', 90, 'Rotation bias in deg. 90 for head-view, 45 for breast-view')
 
 flags.DEFINE_integer('batch_size', 128, 'Size of minibatches')
-flags.DEFINE_integer('n_data_workers', 4, 'Number of data loading workers')
+flags.DEFINE_integer('n_data_workers', 0, 'Number of data loading workers')
 flags.DEFINE_boolean('shuffle_data', False, 'Whether dataloader shuffles data')
 flags.DEFINE_integer('max_eval_iter', 0, 'Maximum evaluation iterations. 0 => 1 epoch.')
 flags.DEFINE_boolean('render', False, 'Render data')
