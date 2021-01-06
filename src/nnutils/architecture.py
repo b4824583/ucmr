@@ -28,7 +28,7 @@ flags.DEFINE_boolean('textureImgCustomDimension', False, 'Use custom dimensions 
 flags.DEFINE_integer('textureImgH', 256, 'texture image height')
 flags.DEFINE_integer('textureImgW', 256, 'texture image width')
 flags.DEFINE_boolean('texture_use_conv_featz', True, 'Use pre-fc conv 4x4 features')
-flags.DEFINE_boolean('textureUnwrapUV', False, 'UV map onto 2d image directly, not a sphere')
+flags.DEFINE_boolean('textureUnwrapUV', True, 'UV map onto 2d image directly, not a sphere')
 flags.DEFINE_boolean('texture_uvshift', True, 'Shift uv-map along x to symmetrize it')
 flags.DEFINE_boolean('texture_predict_flow', False, 'Predict texture flow, or RGB?')
 

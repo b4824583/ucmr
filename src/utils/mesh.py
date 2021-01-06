@@ -26,6 +26,7 @@ def load_obj_file(path, device='cpu'):
         faces_uv = faces_uv.reshape(faces.shape + (2,))
         elem['faces_uv'] = faces_uv
     return elem
+#這一段有faces uv 有vertex 有faces卻沒有vertex uv 為什麼？這太奇怪了吧
 
 def save_obj_file(path, verts, faces):
     verts = verts.detach().cpu().numpy() if torch.is_tensor(verts) else verts
@@ -354,8 +355,15 @@ def compute_uvsampler_softras_unwrapUV(faces_uv, faces, tex_size=2, shift_uv=Fal
     # alpha_beta_txtx2x2[i,j,1,0] = i + 2/3
     # alpha_beta_txtx2x2[i,j,1,1] = j + 2/3
     alpha_beta_txtx2x2 = np.zeros((tex_size, tex_size, 2, 2)) # last dim for alpha beta
+    #6x6x2x2 zero
+    # print(alpha_beta_txtx2x2[5])
     alpha_beta_txtx2x2[:,:,:,0] += np.arange(tex_size).reshape(tex_size,1,1)
+    #6x6x2x2
+    #[[0.0][0.0]]x6 [[1.0][1.0]]x6 [[2.0][2.0]]x6....
+    # print(alpha_beta_txtx2x2)
     alpha_beta_txtx2x2[:,:,:,1] += np.arange(tex_size).reshape(1,tex_size,1)
+    #6x6x2x2
+    # [[0.0][0.0] [0.1][0.1].....[0.5][0.5]] [[1.0][1.0] [1.1][1.1]....[1.5][1.5]]  [[2.0][2.0] [2.1][2.1]...[2.5][2.5]...]
     alpha_beta_txtx2x2[:,:,0,:] += 1/3
     alpha_beta_txtx2x2[:,:,1,:] += 2/3
     alpha_beta_txtx2x2 = alpha_beta_txtx2x2 / tex_size
@@ -370,13 +378,11 @@ def compute_uvsampler_softras_unwrapUV(faces_uv, faces, tex_size=2, shift_uv=Fal
     # coords_txtx2 = np.flip(coords_txtx2,axis=0)
     # coords_txtx2 = np.flip(coords_txtx2,axis=1)
     coords_txtx2 = np.ascontiguousarray(coords_txtx2)
-
     uv0 = faces_uv[:, 2]
     uv01 = faces_uv[:, 1] - faces_uv[:, 2]
     uv02 = faces_uv[:, 0] - faces_uv[:, 2]
     uv_Fx2xtxt = np.inner(np.dstack([uv01, uv02]), coords_txtx2) + uv0.reshape(faces.shape[0], faces_uv.shape[-1], 1, 1)
     uv_Fxtxtx2 = np.transpose(uv_Fx2xtxt, (0, 2, 3, 1))
-
     assert(uv_Fxtxtx2.max()<=1+1e-12)
     assert(uv_Fxtxtx2.min()>=-1+1e-12)
 
@@ -839,6 +845,7 @@ def fetch_mean_shape(shape_path, mean_centre_vertices=False):
         else:
             raise NotImplementedError
     verts = mean_shape['verts']
+
     if mean_centre_vertices:
         verts_mean = np.mean(verts,axis=0,keepdims=True)
         verts_mean[0,0] = 0
@@ -853,7 +860,13 @@ def fetch_mean_shape(shape_path, mean_centre_vertices=False):
         print(f'verts_uv:   normalizing verts')
     try:
         faces_uv = mean_shape['faces_uv']
-        faces_uv = 2*faces_uv-1 # Normalize to [-1,1]
+        edited_by_parker=True
+        if(edited_by_parker==True):
+            faces_uv = ((faces_uv + 2.1547) / 3.1547*2)-1 + 1e-12
+        else:
+            faces_uv = 2*faces_uv-1 # Normalize to [-1,1]
+
+
         print(f'faces_uv:   provided')
     except:
         faces_uv = verts_uv[faces]

@@ -494,19 +494,20 @@ class ShapeTrainer(train_utils.Trainer):
         faces_uv = mean_shape['faces_uv']
 
         # # Visualize uvmap
-        # misc_utils.plot_triangles(faces_uv)
+#        misc_utils.plot_triangles(faces_uv)
 
         self.verts_uv = torch.from_numpy(verts_uv).float() # V,2
         self.verts = torch.from_numpy(verts).float() # V,3
         self.faces = torch.from_numpy(faces).long()  # F,2
         self.faces_uv = torch.from_numpy(faces_uv).float()  # F,3,2
-
+        #使用obj file的時候不會提取那個資料的verts_uv，所以不會觸發這一行的錯誤，這一點滿奇特的
         assert(verts_uv.shape[0] == verts.shape[0])
         assert(verts_uv.shape[1] == 2)
         assert(verts.shape[1] == 3)
         assert(faces.shape[1] == 3)
         assert(faces_uv.shape == (faces.shape)+(2,))
-
+        #這邊convert_uv_to_3d_coordinates這一行把uv的點變回球體，但調鬼的是
+        #這件事情其實跟一開始把它從2d壓扁成3d是差不多的
         # Store UV sperical texture map
         verts_sph = geom_utils.convert_uv_to_3d_coordinates(verts_uv)
         if not opts.textureUnwrapUV:

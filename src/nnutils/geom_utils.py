@@ -37,6 +37,12 @@ def convert_3d_to_uv_coordinates(X):
     Returns UV: N,2 normalized to [-1, 1]
     U: Azimuth: Angle with +X [-pi,pi]
     V: Inclination: Angle with +Z [0,pi]
+    # X is N x 3
+    #基本上這一段是將三維球體轉成二維的，基本上我的認知這邊應該是不對的
+    #這邊是求範數norm 2 陣列內二次方相加開根號 X:23616x3
+    # Inclination   極角
+    # Azimuth       方位角
+    # Normalize both to be between [-1, 1]#這邊將方位角和極角正規化成1,-1的值，不懂為什麼
     """
     if type(X) == torch.Tensor:
         eps=1e-4
