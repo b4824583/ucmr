@@ -111,7 +111,7 @@ class ForwardWrapper(torch.nn.Module):
             verts_uv_vx2=self.verts_uv, faces_uv_fx3x2=self.faces_uv,
             texture_opts=opts
         )
-
+        #如果程式沒在訓練,則進入評估模式,評估模式的dropout 還有batch normalize與train模式不同
         if not opts.is_train:
             self.model.eval()
 
@@ -538,7 +538,11 @@ class ShapeTrainer(train_utils.Trainer):
         ####################
         self.model = ForwardWrapper(opts, self.verts, self.faces, self.verts_uv, self.faces_uv, len(self.dataloader.dataset))
         self.model.define_model()
-        self.model.define_criterion()
+        self.model.define_criterion()#loss=criterion(output,target)
+        #---------------------
+        # If pretrained network exist
+        # And save the camera params
+        #---------------------
         if opts.pretrained_epoch_label or opts.pretrained_network_path:
             self.load_network(self.model.model, 'pred', opts.pretrained_epoch_label, network_dir=opts.pretrained_network_dir, path=opts.pretrained_network_path)
 

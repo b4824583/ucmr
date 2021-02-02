@@ -288,7 +288,6 @@ class Trainer():
                                                 (total_steps % opts.display_freq_init == 0))):
                     tb_visualizer.display_current_results(self.get_current_visuals(), total_steps, save_meshes=opts.save_meshes)
 
-
                 if (opts.print_scalars or opts.plot_scalars) and (total_steps % opts.print_freq == 0):
                     scalars = self.get_current_scalars()
                     scalars['grad_norm'] = grad_norm

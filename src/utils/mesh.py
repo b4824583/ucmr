@@ -350,6 +350,8 @@ def compute_uvsampler_softras_unwrapUV(faces_uv, faces, tex_size=2, shift_uv=Fal
     F x T x T points.
     Returns F x T x T x 2
     """
+    #----------------這邊我猜測看起來是使用softras的方法，等待確認，如果是的話
+    #那麼0,0就是頂點，而0,1就是往右邊的一個點。
     # alpha_beta_txtx2x2[i,j,0,0] = i + 1/3
     # alpha_beta_txtx2x2[i,j,0,1] = j + 1/3
     # alpha_beta_txtx2x2[i,j,1,0] = i + 2/3
@@ -860,11 +862,11 @@ def fetch_mean_shape(shape_path, mean_centre_vertices=False):
         print(f'verts_uv:   normalizing verts')
     try:
         faces_uv = mean_shape['faces_uv']
-        edited_by_parker=True
-        if(edited_by_parker==True):
-            faces_uv = ((faces_uv + 2.1547) / 3.1547*2)-1 + 1e-12
-        else:
-            faces_uv = 2*faces_uv-1 # Normalize to [-1,1]
+        # edited_by_parker=True
+        # if(edited_by_parker==True):
+        #     faces_uv = ((faces_uv + 2.1547) / 3.1547*2)-1 + 1e-12
+        # else:
+        faces_uv = 2*faces_uv-1 # Normalize to [-1,1]
 
 
         print(f'faces_uv:   provided')

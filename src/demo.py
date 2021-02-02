@@ -64,7 +64,7 @@ def preprocess_image(img_path, img_size=256):
 def visualize(img, outputs, renderer):
     vert = outputs['verts']
     cam = outputs['cam_pred']
-    texture = outputs['texture']
+    texture = outputs['texture']#1x1106x6x6x6x3
 
     shape_pred = renderer.rgba(vert, cams=cam)[0,:,:,:3]
     img_pred = renderer.rgba(vert, cams=cam, texture=texture)[0,:,:,:3]
@@ -76,7 +76,19 @@ def visualize(img, outputs, renderer):
         vert, cam, angle=60, axis=[0, 1, 0], texture=texture, extra_elev=True)[0]
     vp3 = renderer.diff_vp(
         vert, cam, angle=60, axis=[1, 0, 0], texture=texture)[0]
-
+    #太奇怪了，原本的cmr是可以顯示texture的，這邊卻步可以
+    # f=open("texture.txt","w")
+    # f.write(repr(texture.shape)+"\n")
+    # f.write(repr(texture))
+    # f.close()
+    # texture=texture.cpu()
+    # plt.ion()
+    # plt.figure(1)
+    # plt.clf()
+    # plt.imshow(texture[0])
+    # plt.show()
+    # plt.savefig("texture.png")
+    # exit()
     img = np.transpose(img, (1, 2, 0))
     plt.ion()
     plt.figure(1)

@@ -147,6 +147,7 @@ class SoftRas(torch.nn.Module):
         # textures: B,F,T,T,T,3
         b,f,t,_,_,_ = textures.shape
         assert(textures.shape == (b,f,t,t,t,3))
+        # 這邊是將原本nmr的texture格式轉換成softras的格式
         textures = textures[:,:,:,:,0,:].view(b,f,t*t,3)
         rgba = self.renderer(vertices, faces, textures)
         return rgba[:,:3,:,:], rgba[:,3,:,:]

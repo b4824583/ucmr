@@ -102,7 +102,7 @@ class TextureMapPredictor_SPADE_noSPADENorm(nn.Module):
     def __init__(self, opts, img_H=64, img_W=128, nc_final=3, predict_flow=False, nc_init=256):
         super().__init__()
         self.SPADE_gen = SPADEGenerator_noSPADENorm(opts, img_H, img_W, nc_init, predict_flow=predict_flow, nc_out=nc_final) # nc_init should match value in Encoder()
-
+        #不確定它回傳了什麼樣的格式。
     def forward(self, conv_feat_bxzxfhxfw):
         self.uvimage_pred = self.SPADE_gen(conv_feat_bxzxfhxfw)
         return self.uvimage_pred
@@ -136,10 +136,12 @@ class TexturePredictorUVShubham(nn.Module):
         self.register_buffer('uv_sampler', uv_sampler.view(self.F, self.T*self.T, 2))   # F x T x T x 2 --> F x T*T x 2
 
     def forward(self, feat):
+        #這邊進入model中會得到一個參數，但我現在沒辦法確定格式
         self.uvimage_pred = self.uvtexture_predictor(feat)
-
+        #--------------------------它把uv_image_pred塞進uv_sampler裡面
         uv_sampler_batch = self.uv_sampler[None].expand(self.uvimage_pred.shape[0],-1,-1,-1)
         tex_pred = torch.nn.functional.grid_sample(self.uvimage_pred, uv_sampler_batch)
+        #--------------------------
         tex_pred = tex_pred.view(self.uvimage_pred.size(0), -1, self.F, self.T, self.T).permute(0, 2, 3, 4, 1)
 
         # Contiguous Needed after the permute..
