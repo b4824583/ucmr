@@ -291,6 +291,11 @@ class Trainer():
                 if (opts.print_scalars or opts.plot_scalars) and (total_steps % opts.print_freq == 0):
                     scalars = self.get_current_scalars()
                     scalars['grad_norm'] = grad_norm
+                    ###############
+                    #---------------------edited by parker
+                    # add texture stretch scalars
+                    ################
+                    #------------------------------
                     if opts.plot_scalars:
                         tb_visualizer.plot_current_scalars(total_steps, opts, scalars)
 

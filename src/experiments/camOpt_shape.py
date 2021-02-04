@@ -39,7 +39,7 @@ from ..utils import image as image_utils
 from ..utils import mesh
 from ..utils import misc as misc_utils
 from ..utils import visutil
-
+from ..utils import textureStretch
 
 flags.DEFINE_string('dataset', 'cub', 'yt (YouTube), or cub, or yt_filt (Youtube, refined)')
 # Weights:
@@ -389,6 +389,12 @@ class ForwardWrapper(torch.nn.Module):
         self.graphlap_loss = self.graphlap_loss_fn(pred_v) if opts.graphlap_loss_wt>0 else _zero
         self.edge_loss = self.edge_loss_fn(pred_v) if opts.edge_loss_wt>0 else _zero
 
+#-------------------------edited by parker add texture distortion
+
+        self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v,self.faces,self.faces_uv)
+
+#------------------------------------
+
         # Loss for camera pose update
         self.camera_update_loss = opts.rend_mask_loss_wt * self.rend_mask_loss_mp.mean() + \
                                     opts.texture_loss_wt * self.texture_loss_mp.mean()
@@ -662,7 +668,9 @@ class ShapeTrainer(train_utils.Trainer):
         frame_id = self.return_dict['frame_id']
         quat_score = self.return_dict['quat_score']
         maskiou = self.return_dict['rend_mask_iou_mp']
-
+#--------------------edited by parker
+        # mean_shape,pred_v=self.return_dict["mean_shape"],self.return_dict["pred_v"]
+#-----------------
         if do_optimize:
             assert(False)
 
@@ -890,6 +898,7 @@ class ShapeTrainer(train_utils.Trainer):
             ('total_loss', self.total_loss.item()),
             ('weighted_loss',weighted_loss),
             ('percent_contrib',percent_contrib),
+            ('texture_distortion_L2',self.texture_distortion_L2),
         ]
         for attr in loss_values:
             sc_dict.append((attr,getattr(self, attr).item()))
