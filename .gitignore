@@ -11927,3 +11927,17 @@ dmypy.json
 /private/home/shubhamgoel/data/CUB_200_2011/images/200.Common_Yellowthroat/Common_Yellowthroat_0122_190570.jpg
 /private/home/shubhamgoel/data/CUB_200_2011/images/200.Common_Yellowthroat/Common_Yellowthroat_0125_190902.jpg
 /private/home/shubhamgoel/data/CUB_200_2011/images/200.Common_Yellowthroat/Common_Yellowthroat_0126_190407.jpg
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/ucmr_parker.iml
+/.idea/vcs.xml
+/azel_test_gt.png
+/azel_test_pred.png
+/cachedir.tar.gz
+/cub_init_campose8x5.tar.gz
+/cub_init_campose8x5.tar.gz.1
+/cub_train_cam4_withcam.tar.gz
+/private/home/shubhamgoel/data/CUB_200_2011/README
+/private/home/shubhamgoel/data/CUB_200_2011/train_test_split.txt
+/.idea/.gitignore

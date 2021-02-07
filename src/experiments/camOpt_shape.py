@@ -390,9 +390,11 @@ class ForwardWrapper(torch.nn.Module):
         self.edge_loss = self.edge_loss_fn(pred_v) if opts.edge_loss_wt>0 else _zero
 
 #-------------------------edited by parker add texture distortion
+        print(pred_v.numpy().shape())
+        print(pred_v[0])
 
-        self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v,self.faces,self.faces_uv)
-
+        self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v.numpy(),self.faces,self.faces_uv)
+        # print(tex)
 #------------------------------------
 
         # Loss for camera pose update
