@@ -35,7 +35,8 @@ class MeshPredictor(object):
         self.verts = torch.from_numpy(mean_shape['verts']).float().cuda() # V,3
         self.faces = torch.from_numpy(mean_shape['faces']).long().cuda()  # F,2
         self.faces_uv = torch.from_numpy(mean_shape['faces_uv']).float().cuda()  # F,3,2
-
+        # self.faces_uv_numpy=mean_shape["faces_uv"] edited by parker
+        # self.faces_numpy=mean_shape["faces"]
         print('Setting up model..')
         img_size = (opts.img_size, opts.img_size)
         self.model = ShapeCamTexNet(

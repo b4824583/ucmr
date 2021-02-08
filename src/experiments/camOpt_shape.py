@@ -99,7 +99,8 @@ class ForwardWrapper(torch.nn.Module):
         self.register_buffer('faces_uv', faces_uv.float())
         self.register_buffer('verts', verts.float())
         self.register_buffer('faces', faces.long())
-
+        # self.faces_by_numpy=faces.detach().numpy()
+        # self.faces_uv_by_numpy=faces_uv.detach().numpy()
     def define_model(self):
         opts = self.opts
 
@@ -273,6 +274,19 @@ class ForwardWrapper(torch.nn.Module):
         # Deform mean shape:
         mean_shape = self.model.get_mean_shape()
         pred_v = mean_shape[None,:,:] + (delta_v)
+#------------------edited by parker
+        # print(pred_v.shape)
+        # print(delta_v.shape)
+        # print(mean_shape.shape)
+        # f=open("shape.off","w")
+        # f.write("OFF\n")
+        # f.write(str(pred_v.shape[1])+" "+str(self.faces)+" 0\n")
+        # for i in range(len(pred_v[1])):
+        #     f.write(str(pred_v[0]))
+        # pred_v[0], self.faces
+        # print("success get here")
+        # exit()
+#-----------------
 
         # Texture stuff: texture_flow, textures
         if opts.pred_texture:
@@ -390,10 +404,32 @@ class ForwardWrapper(torch.nn.Module):
         self.edge_loss = self.edge_loss_fn(pred_v) if opts.edge_loss_wt>0 else _zero
 
 #-------------------------edited by parker add texture distortion
-        print(pred_v.numpy().shape())
-        print(pred_v[0])
+        # pred_v_numpy=pred_v.detach().numpy()
+        # print(pred_v_numpy.shape())
+        # print(pred_v_numpy[0])
+        # print("success")
+        # exit()
+        # print("faces")
+        # print(self.faces)
+        # print("faces_uv")
+        # print(self.faces_uv)
+        # print("faces cpu numpy")
+        # print(self.faces.cpu().numpy())
+        # print("faces uv cpu numpy")
+        # print(self.faces_uv.cpu().numpy())
+        # exit()
+        pred_v_by_numpy=pred_v.detach().cpu().numpy()
+        #因為有4個batches並且有4個pose所以會有16個pred_v ，這邊先測試第一個
+        if opts.textureUnwrapUV:
+            self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v_by_numpy[0],self.faces.cpu().numpy(),self.faces_uv.cpu().numpy())
+        else:
+            self.texture_distortion_L2=0
+        # self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v_by_numpy[4],self.faces.cpu().numpy(),self.faces_uv.cpu().numpy())
+        # self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v_by_numpy[8],self.faces.cpu().numpy(),self.faces_uv.cpu().numpy())
+        # self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v_by_numpy[15],self.faces.cpu().numpy(),self.faces_uv.cpu().numpy())
 
-        self.texture_distortion_L2=textureStretch.computeL2_and_E2(pred_v.numpy(),self.faces,self.faces_uv)
+
+        # exit()
         # print(tex)
 #------------------------------------
 
@@ -482,6 +518,9 @@ class ForwardWrapper(torch.nn.Module):
 
             # Statistics
             'statistics',
+
+            #texture_distortion added by parker
+            'texture_distortion_L2',
         }
         return_dict = {
             k:getattr(self,k) for k in return_attr
@@ -508,6 +547,8 @@ class ShapeTrainer(train_utils.Trainer):
         self.verts = torch.from_numpy(verts).float() # V,3
         self.faces = torch.from_numpy(faces).long()  # F,2
         self.faces_uv = torch.from_numpy(faces_uv).float()  # F,3,2
+        # self.faces_by_numpy=faces
+        # self.faces_uv_by_numpy=faces_uv
         #使用obj file的時候不會提取那個資料的verts_uv，所以不會觸發這一行的錯誤，這一點滿奇特的
         assert(verts_uv.shape[0] == verts.shape[0])
         assert(verts_uv.shape[1] == 2)
@@ -670,6 +711,7 @@ class ShapeTrainer(train_utils.Trainer):
         frame_id = self.return_dict['frame_id']
         quat_score = self.return_dict['quat_score']
         maskiou = self.return_dict['rend_mask_iou_mp']
+        self.texture_distortion_L2=self.return_dict["texture_distortion_L2"]#我再這邊加入texture_distortion_l2，但我不確定是不是一個好選擇
 #--------------------edited by parker
         # mean_shape,pred_v=self.return_dict["mean_shape"],self.return_dict["pred_v"]
 #-----------------
