@@ -47,7 +47,7 @@ flags.DEFINE_boolean('shuffle_data', True, 'Whether dataloader shuffles data')
 flags.DEFINE_string('checkpoint_dir', osp.join(cache_path, 'snapshots'),
                     'Root directory for output files')
 flags.DEFINE_integer('print_freq', 20, 'scalar logging frequency')
-flags.DEFINE_integer('save_latest_freq', 20000, 'save latest model every x iterations')
+flags.DEFINE_integer('save_latest_freq', 40000, 'save latest model every x iterations')
 flags.DEFINE_integer('save_epoch_freq', 2, 'save model every k epochs')
 
 ## Flags for visualization

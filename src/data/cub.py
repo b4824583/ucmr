@@ -20,7 +20,7 @@ if not osp.isdir(cub_dir):
 if not osp.isdir(cub_dir):
     cub_dir = '/private/home/shubhamgoel/data/CUB_200_2011/'
 if not osp.isdir(cub_dir):
-    cub_dir = '/home/parker/ucmr/CUB_200_2011'
+    cub_dir = '/home/parker/data/CUB_200_2011'
 
 flags.DEFINE_string('cub_dir', cub_dir, 'CUB Data Directory')
 curr_path = osp.dirname(osp.abspath(__file__))
